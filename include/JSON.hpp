@@ -1,3 +1,6 @@
+// JSON Plus Plus - JPP
+// Copyright (C) 2020 Diego Tames Vargas (thamesdiego@gmail.com)
+
 #ifndef JSON_HPP
 #define JSON_HPP
 
