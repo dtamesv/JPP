@@ -210,7 +210,7 @@ void jpp::JSON::operator = ( const jpp::JSON &other ){
     }
 }
 
-std::string jpp::JSON::getString(){
+const std::string &jpp::JSON::getString(){
     return value;
 }
 
@@ -315,7 +315,7 @@ bool jpp::JSON::isDefined( const std::string &key ){
     if ( type == Type::Object ){
         JSON *child( children );
         int cmp;
-        while ( child && ( cmp = strcmp( key.c_str(), child->key.c_str() ) ) != 0 ){
+        while ( child && ( cmp = key.compare( child->key ) ) != 0 ){
             child = cmp < 0 ? child->left : child->right;
         }
         return child != 0;
@@ -421,7 +421,7 @@ jpp::JSON *&jpp::JSON::getChild( jpp::JSON *root, jpp::JSON *&child, const std::
         ++this->size;
         return child;
     }
-    int cmp( strcmp( key.c_str(), child->key.c_str() ) );
+    int cmp( key.compare( child->key ) );
     JSON *&json( cmp == 0 ? child : getChild( child, cmp < 0 ? child->left : child->right, key ) );
     json->recalculate();
     if ( json->balanceFactor < -1 ){

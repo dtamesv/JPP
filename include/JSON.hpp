@@ -6,7 +6,6 @@
 
 #include <iterator>
 #include <string>
-#include <cstring>
 #include <sstream>
 
 namespace jpp{
@@ -71,7 +70,7 @@ namespace jpp{
             void operator = ( const long double &value );
             void operator = ( const JSON &other );
 
-            std::string getString();
+            const std::string &getString();
             bool getBoolean();
             int getInteger();
             unsigned int getUInteger();
