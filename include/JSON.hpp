@@ -60,6 +60,8 @@ namespace jpp{
             void operator = ( const bool &value );
             void operator = ( const int &value );
             void operator = ( const unsigned int &value );
+            void operator = ( const short &value );
+            void operator = ( const unsigned short &value );
             void operator = ( const long &value );
             void operator = ( const unsigned long &value );
             void operator = ( const long long &value );
@@ -73,6 +75,8 @@ namespace jpp{
             bool getBoolean();
             int getInteger();
             unsigned int getUInteger();
+            short getShort();
+            unsigned short getUShort();
             long getLong();
             unsigned long getULong();
             long long getLLong();

@@ -232,6 +232,20 @@ unsigned int jpp::JSON::getUInteger(){
     return number;
 }
 
+short jpp::JSON::getShort(){
+    std::stringstream buffer( value );
+    short number( 0 );
+    buffer >> number;
+    return number;
+}
+
+unsigned short jpp::JSON::getUShort(){
+    std::stringstream buffer( value );
+    unsigned short number( 0 );
+    buffer >> number;
+    return number;
+}
+
 long jpp::JSON::getLong(){
     std::stringstream buffer( value );
     long number( 0 );
