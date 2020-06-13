@@ -28,8 +28,6 @@ jpp::JSON::~JSON(){
     setNull();
     key.clear();
     index = 0;
-    height = 0;
-    balanceFactor = 0;
     parent = 0;
     root = 0;
     left = 0;
@@ -68,11 +66,15 @@ const size_t &jpp::JSON::getSize(){
 void jpp::JSON::setNull(){
     type = Type::Null;
     value = "null";
-    clear();
+    if ( children ){
+        clear();
+    }
 }
 
 void jpp::JSON::clear(){
     size = 0;
+    height = 0;
+    balanceFactor = 0;
     clear( children );
 }
 
@@ -99,6 +101,7 @@ bool jpp::JSON::remove(){
         }
         balance( parent->children );
         --parent->size;
+        delete this;
         return true;
     }
     return false;
@@ -335,6 +338,7 @@ bool jpp::JSON::isDefined( const size_t &index ){
 }
 
 void jpp::JSON::parse( const std::string &json ){
+    setNull();
     char *c( const_cast< char* >( &json[ 0 ] ) );
     readValue( c );
 }
@@ -517,6 +521,7 @@ void jpp::JSON::clear( jpp::JSON *&root ){
     if ( root ){
         clear( root->left );
         clear( root->right );
+        root = 0;
         delete root;
     }
 }
