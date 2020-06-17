@@ -1,4 +1,4 @@
 *.layout
 *.depend
-**/bin/Release/*.exe
+**/bin/Release/*.a
 **/obj/
