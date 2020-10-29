@@ -131,6 +131,22 @@ void jpp::JSON::operator = ( const bool &value ){
     this->value = value ? "true" : "false";
 }
 
+void jpp::JSON::operator = ( const short &value ){
+    if ( type != Type::Number ){
+        setNull();
+        type = Type::Number;
+    }
+    this->value = std::to_string( value );
+}
+
+void jpp::JSON::operator = ( const unsigned short &value ){
+    if ( type != Type::Number ){
+        setNull();
+        type = Type::Number;
+    }
+    this->value = std::to_string( value );
+}
+
 void jpp::JSON::operator = ( const int &value ){
     if ( type != Type::Number ){
         setNull();
@@ -221,20 +237,6 @@ bool jpp::JSON::getBoolean(){
     return value == "true";
 }
 
-int jpp::JSON::getInteger(){
-    std::stringstream buffer( value );
-    int number( 0 );
-    buffer >> number;
-    return number;
-}
-
-unsigned int jpp::JSON::getUInteger(){
-    std::stringstream buffer( value );
-    unsigned int number( 0 );
-    buffer >> number;
-    return number;
-}
-
 short jpp::JSON::getShort(){
     std::stringstream buffer( value );
     short number( 0 );
@@ -245,6 +247,20 @@ short jpp::JSON::getShort(){
 unsigned short jpp::JSON::getUShort(){
     std::stringstream buffer( value );
     unsigned short number( 0 );
+    buffer >> number;
+    return number;
+}
+
+int jpp::JSON::getInteger(){
+    std::stringstream buffer( value );
+    int number( 0 );
+    buffer >> number;
+    return number;
+}
+
+unsigned int jpp::JSON::getUInteger(){
+    std::stringstream buffer( value );
+    unsigned int number( 0 );
     buffer >> number;
     return number;
 }
@@ -665,19 +681,19 @@ char jpp::JSON::readEscapeSequence( char *&c ){
                 }
             break;
             case 'b':
-                result += '\b';
+                result = '\b';
             break;
             case 'f':
-                result += '\f';
+                result = '\f';
             break;
             case 'n':
-                result += '\n';
+                result = '\n';
             break;
             case 'r':
-                result += '\r';
+                result = '\r';
             break;
             case 't':
-                result += '\t';
+                result = '\t';
             break;
             default:
                 result = *c;
