@@ -7,7 +7,7 @@ It ibrary allows the programmer to:
 
 `By Diego Tames Vargas.`
 
-## Example or use:
+## Example of use:
 
 ### C++ to JSON
 
