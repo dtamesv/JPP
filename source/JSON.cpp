@@ -537,8 +537,8 @@ void jpp::JSON::clear( jpp::JSON *&root ){
     if ( root ){
         clear( root->left );
         clear( root->right );
-        root = 0;
         delete root;
+        root = 0;
     }
 }
 
