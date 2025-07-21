@@ -1,43 +1,34 @@
-# JPP: JSON Plus Plus Library
-This is a small library aiming to be a very simple way to work with JSON objects in C++.
+# JPP (JSON Plus Plus)
 
-It ibrary allows the programmer to:
-1. Parse JSON objects (from strings) and make them accessible as C++ JPP objects.
-2. Build JSON objects (as strings) from C++ JPP objects.
+**JPP** is a lightweight C++ library for parsing and handling JSON data, created as a personal learning project.  
+This is the second iteration of the project — the first version was built "headfirst", without prior research, as a challenge of raw coding skill (find it under the `old/v1` branch). This time, the goal is to deeply understand how such tools are designed and developed, and to become a better programmer in the process.
 
-`By Diego Tames Vargas.`
+> ⚠️ This project is a **work in progress**. Expect missing features, possible bugs, and active experimentation.
 
-## Example of use:
+## Goals
 
-### C++ to JSON
+- Learn about parser design and implementation
+- Explore different approaches to tokenization, AST building, and error handling
+- Write clean, testable, and idiomatic C++ code
+- Build a usable, minimal JSON parser from scratch
 
-~~~ cpp
-const jpp::JSON obj;
+## Status
 
-obj[ "name" ] = "Diego";
-obj[ "lastname" ] = "Tames Vargas";
-obj[ "job" ] = "Crazy Programmer!";
+Currently under development. Not ready for production use.
 
-std::cout << "JSON: " << obj.toString() << std::endl;
-~~~
+## License
 
-Output:
-~~~json
-{"name":"Diego","lastname":"Tames Vargas","job":"Crazy Programmer!"}
-~~~
+This project is licensed under the [MIT License](LICENSE.txt). You are free to use, modify, and distribute it, with attribution.
 
-### JSON to C++
-~~~cpp
-const jpp::JSON obj( "{\"name\":\"Diego\",\"lastname\":\"Tames Vargas\",\"job\":\"Crazy Programmer!\"}" );
+## Getting Started (Coming soon)
 
-std::cout << "Name: " << obj[ "name" ].getString() << std::endl;
-std::cout << "Lastname: " << obj[ "lastname" ].getString() << std::endl;
-std::cout << "Job: " << obj[ "job" ].getString() << std::endl;
-~~~
+Instructions on how to build, use, and integrate the library will be added here.
 
-Output:
-~~~
-Name: Diego
-Lastname: Tames Vargas
-Job: Crazy Programmer!
-~~~
+## Contributions
+
+At this stage, this is mainly a solo learning journey, but feel free to open issues or share suggestions.
+
+---
+
+**Author:** Diego Tames  
+**Project Type:** Educational / Personal  

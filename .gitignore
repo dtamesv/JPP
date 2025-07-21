@@ -1,4 +1,3 @@
-*.layout
-*.depend
-**/bin/Release/*.a
-**/obj/
+/out
+/bin
+/obj
