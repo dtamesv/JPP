@@ -19,7 +19,7 @@ namespace jpp{
         Null,
         Colon,
         Comma,
-        EndOfFile,
+        End,
         Invalid
       };
 
