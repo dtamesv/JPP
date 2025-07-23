@@ -2,6 +2,7 @@
 #define DTAMESV_JSON_PLUS_PLUS_LEXER
 
 #include <cstddef>
+#include <cstring>
 #include <string>
 #include <string_view>
 
@@ -16,15 +17,17 @@ namespace jpp{
       jpp::Token next();
 
     private:
-      const std::string& input_;
-      std::size_t line_;
-      std::size_t column_;
-      std::size_t offset_;
+      const std::string& input;
+      std::size_t line;
+      std::size_t column;
+      std::size_t offset;
 
       jpp::Token nextNumber();
       jpp::Token nextString();
       jpp::Token nextBoolean();
       jpp::Token nextNull();
+      jpp::Token nextInvalid();
+      jpp::Token nextInvalid( std::size_t ini );
   };
 }
 
