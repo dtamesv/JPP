@@ -22,12 +22,22 @@ namespace jpp{
       std::size_t column;
       std::size_t offset;
 
+      char currChar();
+      char nextChar();
+
       jpp::Token nextNumber();
       jpp::Token nextString();
       jpp::Token nextBoolean();
       jpp::Token nextNull();
       jpp::Token nextInvalid();
       jpp::Token nextInvalid( std::size_t ini );
+
+      bool isWhitespace();
+      bool isWhitespace( char c );
+      bool isDigit();
+      bool isDigit( char c );
+      bool isSymbol();
+      bool isSymbol( char c );
   };
 }
 
