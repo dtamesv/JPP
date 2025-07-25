@@ -13,7 +13,7 @@ namespace jpp{
     public:
       Lexer( const std::string& );
 
-      bool hasNext();
+      bool eof();
       jpp::Token next();
 
     private:
@@ -25,12 +25,13 @@ namespace jpp{
       char currChar();
       char nextChar();
 
+      void ignoreWhitespaces();
+
       jpp::Token nextNumber();
       jpp::Token nextString();
       jpp::Token nextBoolean();
       jpp::Token nextNull();
       jpp::Token nextInvalid();
-      jpp::Token nextInvalid( std::size_t ini );
 
       bool isWhitespace();
       bool isWhitespace( char c );

@@ -1,53 +1,49 @@
 jpp::Lexer::Lexer( const std::string& input ) :
   input( input ),
   line( 1 ),
-  column( 1 ),
+  column( 0 ),
   offset( 0 ){
 }
 
-bool jpp::Lexer::hasNext(){
-  return offset < input.length();
+bool jpp::Lexer::eof(){
+  return offset >= input.length();
 }
 
 
 jpp::Token jpp::Lexer::next(){
-  // Ignore whitespaces
-  while ( isWhitespace() || input[ offset ] == '\r' ){
-    if ( input[ offset++ ] == '\n' ){
-      ++line;
-      column = 1;
-    }else if ( input[ offset ] != '\r' ){
-      ++column;
-    }
-  }
+  ignoreWhitespaces();
 
-  if ( !hasNext() ) return { line, column, jpp::Token::Type::End };
+  if ( eof() ) return { line, column, jpp::Token::Type::End };
 
-  // Read next token
-  switch ( input[ offset ] ){
+  char c = currChar();
+
+  std::size_t iniLine( line );
+  std::size_t iniColumn( column );
+
+  switch ( c ){
     case '{':
-      ++offset;
-      return { line, column++, jpp::Token::Type::LeftBrace };
+      nextChar();
+      return { iniLine, iniColumn, jpp::Token::Type::LeftBrace };
 
     case '}':
-      ++offset;
-      return { line, column++, jpp::Token::Type::RightBrace };
+      nextChar();
+      return { iniLine, iniColumn, jpp::Token::Type::RightBrace };
 
     case '[':
-      ++offset;
-      return { line, column++, jpp::Token::Type::LeftBracket };
+      nextChar();
+      return { iniLine, iniColumn, jpp::Token::Type::LeftBracket };
 
     case ']':
-      ++offset;
-      return { line, column++, jpp::Token::Type::RightBracket };
+      nextChar();
+      return { iniLine, iniColumn, jpp::Token::Type::RightBracket };
     
     case ':':
-      ++offset;
-      return { line, column++, jpp::Token::Type::Colon };
+      nextChar();
+      return { iniLine, iniColumn, jpp::Token::Type::Colon };
     
     case ',':
-      ++offset;
-      return { line, column++, jpp::Token::Type::Comma };
+      nextChar();
+      return { iniLine, iniColumn, jpp::Token::Type::Comma };
 
     case '-':
     [[fallthrough]];
@@ -78,21 +74,20 @@ jpp::Token jpp::Lexer::next(){
       return nextNull();
 
     default:
-      ++offset;
-      return { line, column++, jpp::Token::Type::Invalid };
+      return { iniLine, iniColumn, jpp::Token::Type::Invalid };
   }
 }
 
 char jpp::Lexer::currChar(){
-  if ( offset < input.length )
+  if ( !eof() )
     return input[ offset ];
   return '\0';
 }
 
 char jpp::Lexer::nextChar(){
-  if ( offset < input.length )
+  if ( !eof() )
     ++offset;
-  if ( offset < input.length ){
+  if ( !eof() ){
     char c = input[ offset ];
     if ( c == '\n' ){
       ++line;
@@ -102,6 +97,12 @@ char jpp::Lexer::nextChar(){
     return c;
   }
   return '\0';
+}
+
+void jpp::Lexer::ignoreWhitespaces(){
+  char c = currChar();
+  while ( isWhitespace() || c == '\r' )
+    c = nextChar();
 }
 
 jpp::Token jpp::Lexer::nextNumber(){
@@ -139,9 +140,9 @@ jpp::Token jpp::Lexer::nextNumber(){
         else state = FAState::Invalid;
       break;
       case FAState::IntDigit:
-        else if ( c == '.' ) state = FAState::DecDigit;
+        if ( c == '.' ) state = FAState::DecDigit;
         else if ( c == 'e' || c == 'E' ) state = FAState::Exp;
-        else if ( !isDigit() ) state = FAState::Invalid
+        else if ( !isDigit() ) state = FAState::Invalid;
       break;
       case FAState::IntZero:
         if ( c == '.' ) state = FAState::DecDigit;
@@ -167,14 +168,15 @@ jpp::Token jpp::Lexer::nextNumber(){
         else if ( !isDigit() ) state = FAState::Invalid;
       break;
       case FAState::Invalid:
-        return { line, column, jpp::Token::Type::Invalid, { &input[ offset ], 1 } }
+        return nextInvalid();
       break;
+      default: break;
     }
 
     c = nextChar();
   }while ( state != FAState::Valid );
 
-  return { iniLine, iniColumn, jpp::Token::Type::Number, { &input[ iniOffset ], 1 } };
+  return { iniLine, iniColumn, jpp::Token::Type::Number, { &input[ iniOffset ], offset - iniOffset } };
 }
 
 jpp::Token jpp::Lexer::nextString(){
@@ -182,19 +184,19 @@ jpp::Token jpp::Lexer::nextString(){
 }
 
 jpp::Token jpp::Lexer::nextBoolean(){
-  std::size_t col( column );
+  std::size_t iniColumn( column );
 
   if ( std::strncmp( "true", &input[ offset ], 4 ) == 0 ){
     offset += 4;
     column += 4;
 
-    return { line, col, jpp::Token::Type::True };
+    return { line, iniColumn, jpp::Token::Type::True };
   }
   
   if ( std::strncmp( "false", &input[ offset ], 5 ) == 0 ){
     offset += 5;
     column += 5;
-    return { line, col, jpp::Token::Type::False };
+    return { line, iniColumn, jpp::Token::Type::False };
   }
 
   return nextInvalid();
@@ -212,20 +214,7 @@ jpp::Token jpp::Lexer::nextNull(){
 }
 
 jpp::Token jpp::Lexer::nextInvalid(){
-  return nextInvalid( offset );
-}
-
-jpp::Token jpp::Lexer::nextInvalid( std::size_t ini ){
-  while (
-    hasNext()
-    && !isWhitespace( input[ offset ] )
-    && !isSymbol( input[ offset ] )
-  ){
-    ++offset;
-    ++column;
-  };
-
-  return { line, column, jpp::Token::Type::Invalid, std::string_view( &input[ ini ], offset - ini ) };
+  return { line, column, jpp::Token::Type::Invalid, { &input[ offset ], 1 } };
 }
 
 bool jpp::Lexer::isWhitespace(){
